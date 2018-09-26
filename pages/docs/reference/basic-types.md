@@ -299,6 +299,66 @@ x[0] = x[1] + x[2]
 ```
 </div>
 
+## Unsigned integers
+
+> Unsigned types are *experimental* in Kotlin 1.3+. See details [below](#experimental-status-of-unsigned-integers) 
+{:.note}
+
+Kotlin introduces following types for unsigned integers:
+
+* `kotlin.UByte`: an unsigned 8-bit integer, ranges from 0 to 255
+* `kotlin.UShort`: an unsigned 16-bit integer, ranges from 0 to 65535
+* `kotlin.UInt`: an unsigned 32-bit integer, ranges from 0 to 2^32 - 1
+* `kotlin.ULong`: an unsigned 64-bit integer, ranges from 0 to 2^64 - 1
+
+Unsigned types support most of the operations of their signed counterparts.
+
+> Note that changing unsigned and signed types, even though dual, are different from `Int` to `UInt` is a *binary incompatible* change
+{:.note}
+
+### Specialized classes 
+
+Same as for primitives, each of unsigned type has corresponding type that represents array, specialized for that unsigned type:
+
+* `kotlin.UByteArray`: an array of unsigned bytes
+* `kotlin.UShortArray`: an array of unsigned shorts
+* `kotlin.UIntArray`: an array of unsigned ints
+* `kotlin.ULongArray`: an array of unsigned longs
+
+Same as for signed integer arrays, they provide similar API to `Array` class without boxing overhead. 
+
+Also, [ranges and progressions](ranges.html) supported for `UInt` and `ULong` by classes `kotlin.ranges.UIntRange`, `kotlin.ranges.UIntProgression`, `kotlin.ranges.ULongRange`, `kotlin.ranges.ULongProgression` 
+
+### Literals
+
+In order to simplify the usage of unsigned integers Kotlin provides ability to tag integer literal with suffix indicating specific unsigned type (similarly to `Float`/`Long`): 
+* suffixes `u` and `U` tag literal as unsigned. Exact type will be determined based on the expected type. If no expected type is provided, `UInt` or `ULong` will be chosen based on the size of literal 
+
+<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
+``` kotlin
+val b: UByte = 1u  // UByte, expected type provided
+val s: UShort = 1u // UShort, expected type provided
+val l: ULong = 1u  // ULong, expected type provided
+
+val a1 = 42u // UInt: no expected type provided, constant fits in UInt
+val a2 = 0xFFFF_FFFF_FFFFu // ULong: no expected type provided, constant doesn't fit in UInt
+```
+</div> 
+
+* suffixes `uL` and `UL` explicitly tag literal as unsigned.
+
+<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
+``` kotlin
+val a = 1UL // ULong, even though no expected type provided and constant fits into UInt
+```
+</div>
+
+### Experimental status of unsigned integers
+
+The design of unsigned types is experimental, meaning that this feature is [*moving fast*](components-stability.html#moving-fast) and no compatibility guarantees are given. When using unsigned arithmetics in Kotlin 1.3+, warning will be reported, indicating that this feature is experimental. To remove warning, you have to opt into usage of experimental feature by TODO (see Experimental API [KEEP](https://github.com/Kotlin/KEEP/blob/master/proposals/experimental.md) for more options and details)
+
 ## Strings
 
 Strings are represented by the type `String`. Strings are immutable.
